@@ -12,13 +12,13 @@ export default function Home() {
   const [codigo, setCodigo] = useState(0);
 
   const handleEncoding = useCallback(() => {
-    const texto = encodingCesar(textoComum, codigo);
+    const texto = cesar(textoComum, codigo);
 
     setEncode(texto);
   }, [textoComum, codigo]);
 
   const handleDecoding = useCallback(() => {
-    const texto = decodingCesar(valueEncode, codigo);
+    const texto = cesar(valueEncode, -codigo);
 
     setEncode(texto);
   }, [valueEncode, codigo]);
@@ -29,20 +29,26 @@ export default function Home() {
     setTextoComum("");
   }
 
-  const encodingCesar = (text, shift) => {
-    return String.fromCharCode(
-      ...text
-        .split("")
-        .map((char) => ((char.charCodeAt() - 97 + shift) % 26) + 97)
-    );
-  };
+  var cesar = function (str, amount) {
+    if (amount < 0) {
+      return cesar(str, amount + 26);
+    }
+    var output = "";
+    for (var i = 0; i < str.length; i++) {
+      var c = str[i];
 
-  const decodingCesar = (text, shift) => {
-    return String.fromCharCode(
-      ...text
-        .split("")
-        .map((char) => ((char.charCodeAt() - 97 - shift) % 26) + 97)
-    );
+      if (c.match(/[a-z]/i)) {
+        var code = str.charCodeAt(i);
+
+        if (code >= 65 && code <= 90) {
+          c = String.fromCharCode(((code - 65 + amount) % 26) + 65);
+        } else if (code >= 97 && code <= 122) {
+          c = String.fromCharCode(((code - 97 + amount) % 26) + 97);
+        }
+      }
+      output += c;
+    }
+    return output;
   };
 
   return (
